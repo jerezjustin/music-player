@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import type { ErrorMessage } from 'vee-validate'
 import { ref, type Ref } from 'vue'
+
 import AppAlert from './AppAlert.vue'
 import AlerState from '@/enums/AlertState'
+import { auth, usersCollection } from '@/includes/firebase'
 
 const submitting: Ref<boolean> = ref(false)
 const message: Ref<string> = ref('')
@@ -18,16 +20,29 @@ const schema: Object = {
     tos: 'tos'
 }
 
-const register = (values: any) => {
+const register = async (values: any) => {
     submitting.value = true
     message.value = 'Please wait, your account is being created.'
     state.value = AlerState.info
 
-    setTimeout(() => {
+    try {
+        await auth.createUserWithEmailAndPassword(values.email, values.password)
+
+        await usersCollection.add({
+            name: values.name,
+            email: values.email,
+            age: values.age,
+            country: values.country
+        })
+
         message.value = 'Your account has been created'
         state.value = AlerState.sucess
         console.log(values)
-    }, 3000)
+    } catch (error) {
+        submitting.value = false
+        message.value = 'An unexpected error ocurred. Please, try again later.'
+        state.value = AlerState.error
+    }
 }
 </script>
 
