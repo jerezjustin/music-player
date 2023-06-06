@@ -5,6 +5,9 @@ import { ref, type Ref } from 'vue'
 import AppAlert from './AppAlert.vue'
 import AlerState from '@/enums/AlertState'
 import { auth, usersCollection } from '@/includes/firebase'
+import { useUserStore } from '@/stores/user'
+
+const user = useUserStore()
 
 const submitting: Ref<boolean> = ref(false)
 const message: Ref<string> = ref('')
@@ -26,23 +29,15 @@ const register = async (values: any) => {
     state.value = AlerState.info
 
     try {
-        await auth.createUserWithEmailAndPassword(values.email, values.password)
-
-        await usersCollection.add({
-            name: values.name,
-            email: values.email,
-            age: values.age,
-            country: values.country
-        })
-
-        message.value = 'Your account has been created'
-        state.value = AlerState.sucess
-        console.log(values)
+        await user.register(values)
     } catch (error) {
-        submitting.value = false
         message.value = 'An unexpected error ocurred. Please, try again later.'
         state.value = AlerState.error
     }
+
+    message.value = 'Your account has been created'
+    state.value = AlerState.sucess
+    window.location.reload()
 }
 </script>
 

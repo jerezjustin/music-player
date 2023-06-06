@@ -3,6 +3,10 @@ import type { ErrorMessage } from 'vee-validate'
 import { ref, type Ref } from 'vue'
 import AppAlert from './AppAlert.vue'
 import AlerState from '@/enums/AlertState'
+import { useUserStore } from '@/stores/user'
+import { auth } from '@/includes/firebase'
+
+const userStore = useUserStore()
 
 const submitting: Ref<boolean> = ref(false)
 const message: Ref<string> = ref('')
@@ -13,16 +17,22 @@ const schema: Object = {
     password: 'required|min:8|max:32'
 }
 
-const login = (values: any) => {
+const login = async (values: any) => {
     submitting.value = true
     message.value = 'Please wait, your being logged in.'
     state.value = AlerState.info
 
-    setTimeout(() => {
-        message.value = 'Your are now logged in.'
-        state.value = AlerState.sucess
-        console.log(values)
-    }, 3000)
+    try {
+        await userStore.login(values.email, values.password)
+    } catch (error) {
+        message.value = 'The email or password is incorrect.'
+        state.value = AlerState.error
+        return
+    }
+
+    message.value = 'Your are now logged in.'
+    state.value = AlerState.sucess
+    window.location.reload()
 }
 </script>
 
