@@ -1,4 +1,5 @@
 import { auth, usersCollection } from '@/includes/firebase'
+import type { User } from '@/interfaces/User'
 import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', {
