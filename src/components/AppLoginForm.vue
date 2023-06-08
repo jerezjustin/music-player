@@ -4,7 +4,6 @@ import { ref, type Ref } from 'vue'
 import AppAlert from './AppAlert.vue'
 import AlerState from '@/enums/AlertState'
 import { useUserStore } from '@/stores/user'
-import { auth } from '@/includes/firebase'
 
 const userStore = useUserStore()
 
