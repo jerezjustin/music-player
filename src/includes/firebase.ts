@@ -4,12 +4,12 @@ import 'firebase/compat/firestore'
 import 'firebase/compat/storage'
 
 const firebaseConfig: Object = {
-    apiKey: 'AIzaSyArG7R8uPvld3IL1LKjyDGxo-M8cDsg7MM',
-    authDomain: 'music-p Artlayer-fa87c.firebaseapp.com',
-    projectId: 'music-player-fa87c',
-    storageBucket: 'music-player-fa87c.appspot.com',
-    messagingSenderId: '263857665039',
-    appId: '1:263857665039:web:6112b14b26113e01955f7a'
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGE_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID
 }
 
 firebase.initializeApp(firebaseConfig)
