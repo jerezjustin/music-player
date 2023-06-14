@@ -1,8 +1,13 @@
 <script lang="ts" setup>
 import { ref, type Ref } from 'vue'
-import { storage } from '@/includes/firebase'
+import { auth, storage, songsCollection } from '@/includes/firebase'
+
+import State from '@/enums/State'
+import type { UploadingFile } from '@/interfaces/UploadingFile'
+import type { Song } from '@/interfaces/Song'
 
 const isDragover: Ref<boolean> = ref(false)
+const uploads: Ref<UploadingFile[]> = ref([])
 
 const upload = ($event: DragEvent) => {
     isDragover.value = false
@@ -19,10 +24,48 @@ const upload = ($event: DragEvent) => {
         }
 
         const storageRef = storage.ref()
-
         const songsRef = storageRef.child(`songs/${file.name}`)
+        const task = songsRef.put(file)
 
-        songsRef.put(file)
+        const uploadIndex =
+            uploads.value.push({
+                task,
+                name: file.name,
+                state: State.info,
+                icon: 'fas fa-spinner fa-spin',
+                current_progress: 0
+            }) - 1
+
+        task.on(
+            'state_changed',
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                uploads.value[uploadIndex].current_progress = progress
+            },
+            // Handle errors
+            (error) => {
+                uploads.value[uploadIndex].state = State.error
+                uploads.value[uploadIndex].icon = 'fas fa-times'
+            },
+            // Handle successful uploads
+            async () => {
+                let song: Song = {
+                    uid: auth.currentUser?.uid ?? '',
+                    displayName: auth.currentUser?.displayName ?? '',
+                    original_name: task.snapshot.ref.name,
+                    modified_name: task.snapshot.ref.name,
+                    genre: '',
+                    comment_count: 0,
+                    url: ''
+                }
+
+                song.url = await task.snapshot.ref.getDownloadURL()
+                await songsCollection.add(song)
+
+                uploads.value[uploadIndex].state = State.sucess
+                uploads.value[uploadIndex].icon = 'fas fa-check'
+            }
+        )
     })
 }
 </script>
@@ -50,24 +93,30 @@ const upload = ($event: DragEvent) => {
             </div>
             <hr class="my-6" />
             <!-- Progess Bars -->
-            <div class="mb-4">
+            <div class="mb-4" v-for="upload in uploads" :key="upload.name">
                 <!-- File Name -->
-                <div class="font-bold text-sm">Just another song.mp3</div>
+                <div
+                    class="font-bold text-sm"
+                    :class="{
+                        'text-green-400': upload.state === State.sucess,
+                        'text-blue-400': upload.state === State.info,
+                        'text-red-400': upload.state === State.error
+                    }"
+                >
+                    <i :class="upload.icon"></i>
+                    {{ upload.name }}
+                </div>
                 <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
                     <!-- Inner Progress Bar -->
-                    <div class="transition-all progress-bar bg-blue-400" style="width: 75%"></div>
-                </div>
-            </div>
-            <div class="mb-4">
-                <div class="font-bold text-sm">Just another song.mp3</div>
-                <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-                    <div class="transition-all progress-bar bg-blue-400" style="width: 35%"></div>
-                </div>
-            </div>
-            <div class="mb-4">
-                <div class="font-bold text-sm">Just another song.mp3</div>
-                <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-                    <div class="transition-all progress-bar bg-blue-400" style="width: 55%"></div>
+                    <div
+                        class="transition-all progress-bar bg-blue-400"
+                        :class="{
+                            'bg-green-400': upload.state === State.sucess,
+                            'bg-blue-400': upload.state === State.info,
+                            'bg-red-400': upload.state === State.error
+                        }"
+                        :style="{ width: upload.current_progress + '%' }"
+                    ></div>
                 </div>
             </div>
         </div>

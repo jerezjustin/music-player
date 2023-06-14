@@ -2,14 +2,14 @@
 import type { ErrorMessage } from 'vee-validate'
 import { ref, type Ref } from 'vue'
 import AppAlert from './AppAlert.vue'
-import AlerState from '@/enums/AlertState'
+import State from '@/enums/State'
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 
 const submitting: Ref<boolean> = ref(false)
 const message: Ref<string> = ref('')
-const state: Ref<AlerState> = ref(AlerState.info)
+const state: Ref<State> = ref(State.info)
 
 const schema: Object = {
     email: 'required|email',
@@ -19,18 +19,18 @@ const schema: Object = {
 const login = async (values: any) => {
     submitting.value = true
     message.value = 'Please wait, your being logged in.'
-    state.value = AlerState.info
+    state.value = State.info
 
     try {
         await userStore.login(values.email, values.password)
     } catch (error) {
         message.value = 'The email or password is incorrect.'
-        state.value = AlerState.error
+        state.value = State.error
         return
     }
 
     message.value = 'Your are now logged in.'
-    state.value = AlerState.sucess
+    state.value = State.sucess
     window.location.reload()
 }
 </script>

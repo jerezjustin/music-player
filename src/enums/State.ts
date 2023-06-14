@@ -1,8 +1,8 @@
-enum AlertState {
+enum State {
     sucess,
     info,
     warning,
     error
 }
 
-export default AlertState
+export default State

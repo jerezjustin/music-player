@@ -3,7 +3,7 @@ import type { ErrorMessage } from 'vee-validate'
 import { ref, type Ref } from 'vue'
 
 import AppAlert from './AppAlert.vue'
-import AlerState from '@/enums/AlertState'
+import State from '@/enums/State'
 import { auth, usersCollection } from '@/includes/firebase'
 import { useUserStore } from '@/stores/user'
 
@@ -11,7 +11,7 @@ const user = useUserStore()
 
 const submitting: Ref<boolean> = ref(false)
 const message: Ref<string> = ref('')
-const state: Ref<AlerState> = ref(AlerState.info)
+const state: Ref<State> = ref(State.info)
 
 const schema: Object = {
     name: 'required|min:3|max:100|alpha_spaces',
@@ -26,17 +26,17 @@ const schema: Object = {
 const register = async (values: any) => {
     submitting.value = true
     message.value = 'Please wait, your account is being created.'
-    state.value = AlerState.info
+    state.value = State.info
 
     try {
         await user.register(values)
     } catch (error) {
         message.value = 'An unexpected error ocurred. Please, try again later.'
-        state.value = AlerState.error
+        state.value = State.error
     }
 
     message.value = 'Your account has been created'
-    state.value = AlerState.sucess
+    state.value = State.sucess
     window.location.reload()
 }
 </script>
