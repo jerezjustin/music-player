@@ -9,13 +9,15 @@ import type { Song } from '@/interfaces/Song'
 const isDragover: Ref<boolean> = ref(false)
 const uploads: Ref<UploadingFile[]> = ref([])
 
-const upload = ($event: DragEvent) => {
+const upload = ($event: Event | DragEvent) => {
     isDragover.value = false
 
     let files: File[] = []
 
-    if ($event.dataTransfer?.files) {
+    if ($event.dataTransfer.files) {
         files = [...$event.dataTransfer.files]
+    } else if ($event.target.files) {
+        files = [...$event.target.files]
     }
 
     files.forEach((file: File) => {
@@ -91,7 +93,11 @@ const upload = ($event: DragEvent) => {
             >
                 <h5>Drop your files here</h5>
             </div>
+
+            <input type="file" multiple @change="upload($event)" />
+
             <hr class="my-6" />
+
             <!-- Progess Bars -->
             <div class="mb-4" v-for="upload in uploads" :key="upload.name">
                 <!-- File Name -->
