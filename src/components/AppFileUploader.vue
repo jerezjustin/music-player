@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, type Ref } from 'vue'
+import { onBeforeUnmount, ref, type Ref } from 'vue'
 import { auth, storage, songsCollection } from '@/includes/firebase'
 
 import State from '@/enums/State'
@@ -72,6 +72,20 @@ const upload = ($event: FileEventTarget) => {
         )
     })
 }
+
+const cancelUploads = () => {
+    if (confirm('Are you sure? In progress uploads will be canceled.')) {
+        uploads.value.forEach((upload: UploadingFile) => {
+            upload.task.cancel()
+        })
+    }
+
+    return
+}
+
+onBeforeUnmount(() => {
+    cancelUploads()
+})
 </script>
 
 <template>
