@@ -6,17 +6,19 @@ import State from '@/enums/State'
 import type { UploadingFile } from '@/interfaces/UploadingFile'
 import type { Song } from '@/interfaces/Song'
 
+export type FileEventTarget = DragEvent & { target: { files: FileList } }
+
 const isDragover: Ref<boolean> = ref(false)
 const uploads: Ref<UploadingFile[]> = ref([])
 
-const upload = ($event: Event | DragEvent) => {
+const upload = ($event: FileEventTarget) => {
     isDragover.value = false
 
     let files: File[] = []
 
-    if ($event.dataTransfer.files) {
+    if ($event.dataTransfer) {
         files = [...$event.dataTransfer.files]
-    } else if ($event.target.files) {
+    } else if ($event.target) {
         files = [...$event.target.files]
     }
 
