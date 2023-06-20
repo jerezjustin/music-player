@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { ErrorMessage } from 'vee-validate'
-import { ref, type Ref } from 'vue'
+import { ref, type Component, type Ref } from 'vue'
 import AppAlert from './AppAlert.vue'
 import State from '@/enums/State'
 import { useUserStore } from '@/stores/user'
@@ -8,8 +8,8 @@ import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 
 const submitting: Ref<boolean> = ref(false)
-const message: Ref<string> = ref('')
-const state: Ref<State> = ref(State.info)
+
+const alertComponent = ref()
 
 const schema: Object = {
     email: 'required|email',
@@ -18,25 +18,27 @@ const schema: Object = {
 
 const login = async (values: any) => {
     submitting.value = true
-    message.value = 'Please wait, your being logged in.'
-    state.value = State.info
+    alertComponent.value.setVisibility(true)
+    alertComponent.value.setMessage('Please wait, your being logged in.')
+    alertComponent.value.setState(State.info)
 
     try {
         await userStore.login(values.email, values.password)
     } catch (error) {
-        message.value = 'The email or password is incorrect.'
-        state.value = State.error
+        alertComponent.value.setMessage('The email or password is incorrect.')
+        alertComponent.value.setState(State.error)
         return
     }
 
-    message.value = 'Your are now logged in.'
-    state.value = State.sucess
+    alertComponent.value.setMessage('Your are now logged in.')
+    alertComponent.value.setState(State.sucess)
+
     window.location.reload()
 }
 </script>
 
 <template>
-    <AppAlert v-if="submitting" :message="message" :state="state" />
+    <AppAlert ref="alertComponent" />
 
     <VeeForm :validation-schema="schema" @submit="login">
         <!-- Email -->

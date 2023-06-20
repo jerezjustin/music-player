@@ -10,8 +10,8 @@ import { useUserStore } from '@/stores/user'
 const user = useUserStore()
 
 const submitting: Ref<boolean> = ref(false)
-const message: Ref<string> = ref('')
-const state: Ref<State> = ref(State.info)
+
+const alertComponent = ref()
 
 const schema: Object = {
     name: 'required|min:3|max:100|alpha_spaces',
@@ -25,24 +25,26 @@ const schema: Object = {
 
 const register = async (values: any) => {
     submitting.value = true
-    message.value = 'Please wait, your account is being created.'
-    state.value = State.info
+    alertComponent.value.setVisibility(true)
+    alertComponent.value.setMessage('Please wait, your account is being created.')
+    alertComponent.value.setState(State.info)
 
     try {
         await user.register(values)
     } catch (error) {
-        message.value = 'An unexpected error ocurred. Please, try again later.'
-        state.value = State.error
+        alertComponent.value.setMessage('An unexpected error ocurred. Please, try again later.')
+        alertComponent.value.setState(State.error)
     }
 
-    message.value = 'Your account has been created'
-    state.value = State.sucess
+    alertComponent.value.setMessage('Your account has been created')
+    alertComponent.value.setState(State.sucess)
+
     window.location.reload()
 }
 </script>
 
 <template>
-    <AppAlert v-if="submitting" :message="message" :state="state" />
+    <AppAlert ref="alertComponent" />
 
     <VeeForm :validation-schema="schema" @submit="register">
         <!-- Name -->
