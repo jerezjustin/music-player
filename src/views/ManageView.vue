@@ -16,9 +16,13 @@ onMounted(async () => {
     snapshot.forEach((document: DocumentData) => {
         const song: Song = { ...document.data(), documentID: document.id }
 
-        songs.value.push(song)
+        addSong(song)
     })
 })
+
+const addSong = (song: Song) => {
+    songs.value.push(song)
+}
 
 const updateSong = (index: number, values: Object) => {
     songs.value[index] = {
@@ -37,7 +41,7 @@ const removeSong = (index: number) => {
     <section class="container mx-auto mt-6">
         <div class="md:grid md:grid-cols-3 md:gap-4">
             <div class="col-span-1">
-                <AppFileUploader />
+                <AppFileUploader :addSong="addSong" />
             </div>
             <div class="col-span-2">
                 <div class="bg-white rounded border border-gray-200 relative flex flex-col">

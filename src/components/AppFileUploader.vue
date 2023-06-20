@@ -8,6 +8,13 @@ import type { Song } from '@/interfaces/Song'
 
 export type FileEventTarget = DragEvent & { target: { files: FileList } }
 
+const props = defineProps({
+    addSong: {
+        type: Function,
+        required: true
+    }
+})
+
 const isDragover: Ref<boolean> = ref(false)
 const uploads: Ref<UploadingFile[]> = ref([])
 
@@ -68,6 +75,8 @@ const upload = ($event: FileEventTarget) => {
 
                 uploads.value[uploadIndex].state = State.sucess
                 uploads.value[uploadIndex].icon = 'fas fa-check'
+
+                props.addSong(song)
             }
         )
     })
