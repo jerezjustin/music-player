@@ -7,8 +7,10 @@ import type { Song } from '@/interfaces/Song'
 
 import AppFileUploader from '@/components/AppFileUploader.vue'
 import CompositionItem from '@/components/CompositionItem.vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 const songs: Ref<Song[]> = ref([])
+let unsavedFlag: Ref<boolean> = ref(false)
 
 onMounted(async () => {
     const snapshot = await songsCollection.where('uid', '==', auth.currentUser?.uid).get()
@@ -18,6 +20,18 @@ onMounted(async () => {
 
         addSong(song)
     })
+})
+
+onBeforeRouteLeave((to, from, next) => {
+    if (!unsavedFlag.value) {
+        next()
+    } else {
+        const willLeave = confirm(
+            'Are you sure? All the progress uploading and editing songs will be lost.'
+        )
+
+        next(willLeave)
+    }
 })
 
 const addSong = (song: Song) => {
@@ -31,6 +45,12 @@ const updateSong = (index: number, values: Object) => {
     }
 }
 
+const updateUnsavedFlag = (value: boolean) => {
+    console.log(value)
+    unsavedFlag.value = value
+    console.log(unsavedFlag.value)
+}
+
 const removeSong = (index: number) => {
     songs.value.splice(index, 1)
 }
@@ -41,7 +61,7 @@ const removeSong = (index: number) => {
     <section class="container mx-auto mt-6">
         <div class="md:grid md:grid-cols-3 md:gap-4">
             <div class="col-span-1">
-                <AppFileUploader :addSong="addSong" />
+                <AppFileUploader :addSong="addSong" :updateUnsavedFlag="updateUnsavedFlag" />
             </div>
             <div class="col-span-2">
                 <div class="bg-white rounded border border-gray-200 relative flex flex-col">
@@ -56,6 +76,7 @@ const removeSong = (index: number) => {
                             :song="song"
                             :index="index"
                             :updateSong="updateSong"
+                            :updateUnsavedFlag="updateUnsavedFlag"
                             :removeSong="removeSong"
                             :key="song.documentID"
                         />

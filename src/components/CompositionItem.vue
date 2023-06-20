@@ -5,6 +5,7 @@ import { ref, type PropType, type Ref } from 'vue'
 import AppAlert from './AppAlert.vue'
 import State from '@/enums/State'
 import { songsCollection, storage } from '@/includes/firebase'
+import { required } from '@vee-validate/rules'
 
 const props = defineProps({
     song: {
@@ -12,6 +13,10 @@ const props = defineProps({
         required: true
     },
     updateSong: {
+        type: Function,
+        required: true
+    },
+    updateUnsavedFlag: {
         type: Function,
         required: true
     },
@@ -36,6 +41,7 @@ const showForm: Ref<boolean> = ref(false)
 
 const edit = async (values: any) => {
     submitting.value = true
+
     alertComponent.value.setVisibility(true)
     alertComponent.value.setMessage('Please wait! Updating song info.')
     alertComponent.value.setState(State.info)
@@ -51,6 +57,8 @@ const edit = async (values: any) => {
         alertComponent.value.setMessage('There was an error. Please try again later.')
         alertComponent.value.setState(State.error)
     }
+
+    props.updateUnsavedFlag(false)
 
     submitting.value = false
     alertComponent.value.setMessage('The song was updated successfully.')
@@ -91,6 +99,7 @@ const deleteSong = async () => {
                 <div class="mb-3">
                     <label class="inline-block mb-2">Song Title</label>
                     <VeeField
+                        @input="updateUnsavedFlag(true)"
                         name="modified_name"
                         type="text"
                         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
@@ -101,6 +110,7 @@ const deleteSong = async () => {
                 <div class="mb-3">
                     <label class="inline-block mb-2">Genre</label>
                     <VeeField
+                        @input="updateUnsavedFlag(true)"
                         name="genre"
                         type="text"
                         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"

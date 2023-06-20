@@ -5,18 +5,23 @@ import { auth, storage, songsCollection } from '@/includes/firebase'
 import State from '@/enums/State'
 import type { UploadingFile } from '@/interfaces/UploadingFile'
 import type { Song } from '@/interfaces/Song'
+import { required } from '@vee-validate/rules'
 
 export type FileEventTarget = DragEvent & { target: { files: FileList } }
+
+const isDragover: Ref<boolean> = ref(false)
+const uploads: Ref<UploadingFile[]> = ref([])
 
 const props = defineProps({
     addSong: {
         type: Function,
         required: true
+    },
+    updateUnsavedFlag: {
+        type: Function,
+        required: true
     }
 })
-
-const isDragover: Ref<boolean> = ref(false)
-const uploads: Ref<UploadingFile[]> = ref([])
 
 const upload = ($event: FileEventTarget) => {
     isDragover.value = false
@@ -28,6 +33,8 @@ const upload = ($event: FileEventTarget) => {
     } else if ($event.target) {
         files = [...$event.target.files]
     }
+
+    props.updateUnsavedFlag(true)
 
     files.forEach((file: File) => {
         if (file.type !== 'audio/mpeg') {
@@ -77,19 +84,17 @@ const upload = ($event: FileEventTarget) => {
                 uploads.value[uploadIndex].icon = 'fas fa-check'
 
                 props.addSong(song)
+
+                props.updateUnsavedFlag(false)
             }
         )
     })
 }
 
 const cancelUploads = () => {
-    if (confirm('Are you sure? In progress uploads will be canceled.')) {
-        uploads.value.forEach((upload: UploadingFile) => {
-            upload.task.cancel()
-        })
-    }
-
-    return
+    uploads.value.forEach((upload: UploadingFile) => {
+        upload.task.cancel()
+    })
 }
 
 onBeforeUnmount(() => {
