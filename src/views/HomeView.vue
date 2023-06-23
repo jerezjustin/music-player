@@ -1,13 +1,49 @@
 <script setup lang="ts">
-import { onMounted, ref, type Ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref, type Ref } from 'vue'
 import { songsCollection } from '@/includes/firebase'
 import type { Song } from '@/interfaces/Song'
 import SongItem from '@/components/SongItem.vue'
 
 const songs: Ref<Song[]> = ref([])
+const pendingRequest: Ref<boolean> = ref(false)
+const maxSongsPerPage = 10
+
+const songsCount = computed(() => {
+    return songs.value.length
+})
 
 onMounted(async () => {
-    const snapshots = await songsCollection.get()
+    getSongs()
+
+    window.addEventListener('scroll', handleScroll)
+})
+
+onBeforeMount(() => {
+    window.removeEventListener('scroll', handleScroll)
+})
+
+const getSongs = async () => {
+    if (pendingRequest.value) {
+        return
+    }
+
+    pendingRequest.value = true
+
+    let snapshots
+
+    if (songs.value.length) {
+        const lastDocument = await songsCollection
+            .doc(songs.value[songs.value.length - 1].documentID)
+            .get()
+
+        snapshots = await songsCollection
+            .orderBy('modified_name')
+            .startAfter(lastDocument)
+            .limit(maxSongsPerPage)
+            .get()
+    } else {
+        snapshots = await songsCollection.orderBy('modified_name').limit(maxSongsPerPage).get()
+    }
 
     snapshots.forEach((document: { id: string; data: Function }) => {
         songs.value.push({
@@ -15,7 +51,19 @@ onMounted(async () => {
             ...document.data()
         })
     })
-})
+
+    pendingRequest.value = false
+}
+
+const handleScroll = async () => {
+    const { scrollTop, offsetHeight } = document.documentElement
+    const { innerHeight } = window
+    const windowBottom = Math.round(scrollTop) + innerHeight === offsetHeight
+
+    if (windowBottom) {
+        await getSongs()
+    }
+}
 </script>
 
 <template>
@@ -48,7 +96,7 @@ onMounted(async () => {
         <section class="container mx-auto">
             <div class="bg-white rounded border border-gray-200 relative flex flex-col">
                 <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
-                    <span class="card-title">Songs</span>
+                    <span class="card-title">Songs ({{ songsCount }})</span>
                     <!-- Icon -->
                     <i class="fa fa-headphones-alt float-right text-green-400 text-xl"></i>
                 </div>
