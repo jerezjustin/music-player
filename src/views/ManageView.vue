@@ -46,9 +46,7 @@ const updateSong = (index: number, values: Object) => {
 }
 
 const updateUnsavedFlag = (value: boolean) => {
-    console.log(value)
     unsavedFlag.value = value
-    console.log(unsavedFlag.value)
 }
 
 const removeSong = (index: number) => {
