@@ -6,16 +6,16 @@ const visible: Ref<boolean> = ref(false)
 const message: Ref<string> = ref('')
 const state: Ref<State> = ref(State.info)
 
-const setVisibility = () => {
-    visible.value = !visible.value
+const setVisibility = (value: boolean) => {
+    visible.value = value
 }
 
-const setMessage = (messageValue: string) => {
-    message.value = messageValue
+const setMessage = (value: string) => {
+    message.value = value
 }
 
-const setState = (stateValue: State) => {
-    state.value = stateValue
+const setState = (value: State) => {
+    state.value = value
 }
 
 defineExpose({
@@ -37,5 +37,9 @@ defineExpose({
         }"
     >
         {{ message }}
+
+        <button @click.prevent="visible = false" class="float-right">
+            <i class="fa fa-times"></i>
+        </button>
     </div>
 </template>
