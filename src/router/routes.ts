@@ -15,6 +15,11 @@ export const routes: readonly RouteRecordRaw[] = [
         }
     },
     {
+        name: 'song',
+        path: '/song/:id',
+        component: () => import('@/views/SongView.vue')
+    },
+    {
         path: '/:catchAll(.*)*',
         redirect: { name: 'home' }
     }
