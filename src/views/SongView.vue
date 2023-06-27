@@ -1,25 +1,80 @@
 <script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router'
-import { songsCollection } from '@/includes/firebase'
-import { onMounted, ref, type Ref } from 'vue'
+import { computed, onMounted, ref, watch, type Ref } from 'vue'
+
+import { commentsCollection, songsCollection } from '@/includes/firebase'
+
 import type { Song } from '@/interfaces/Song'
+import type Comment from '@/interfaces/Comment'
+
+import CommentForm from '@/components/CommentForm.vue'
+import CommentsList from '@/components/CommentsList.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-const song: Ref<Song | null> = ref(null)
+const songDocumentId: string = route.params.id as string
+
+const sort = ref('1')
+const song: Ref<Song> = ref() as Ref<Song>
+const comments: Ref<Comment[]> = ref([])
+
+const sortedComments = computed(() => {
+    return comments.value.slice().sort((a, b) => {
+        if (sort.value == '1') {
+            return new Date(b.date_posted) - new Date(a.date_posted)
+        }
+
+        return new Date(a.date_posted) - new Date(b.date_posted)
+    })
+})
+
+watch(sort, (value) => {
+    if (value === route.query.sort) {
+        return
+    }
+
+    router.push({ query: { sort: value } })
+})
 
 onMounted(async () => {
-    const songDocumentId: string = route.params.id as string
-
     const snapshot = await songsCollection.doc(songDocumentId).get()
 
     if (!snapshot.exists) {
         router.push({ name: 'home' })
     }
 
+    const sortValue = route.query.sort
+
+    sort.value = sortValue == '2' || sortValue == '2' ? sortValue : '1'
+
     song.value = snapshot.data() as Song
+
+    await getComments()
 })
+
+const updateSongComments = async () => {
+    song.value.comment_count += 1
+
+    await songsCollection.doc(songDocumentId).update({
+        comment_count: song.value.comment_count
+    })
+
+    await getComments()
+}
+
+const getComments = async () => {
+    const snapshots = await commentsCollection.where('song_id', '==', songDocumentId).get()
+
+    comments.value = []
+
+    snapshots.forEach((document) => {
+        comments.value.push({
+            document_id: document.id,
+            ...(document.data() as Comment)
+        })
+    })
+}
 </script>
 
 <template>
@@ -44,26 +99,24 @@ onMounted(async () => {
             </div>
         </div>
     </section>
+
     <!-- Form -->
     <section class="container mx-auto mt-6">
         <div class="bg-white rounded border border-gray-200 relative flex flex-col">
             <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
                 <!-- Comment Count -->
-                <span class="card-title">Comments (15)</span>
+                <span class="card-title">Comments ({{ song?.comment_count }})</span>
                 <i class="fa fa-comments float-right text-green-400 text-2xl"></i>
             </div>
             <div class="p-6">
-                <form>
-                    <textarea
-                        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded mb-4"
-                        placeholder="Your comment here..."
-                    ></textarea>
-                    <button type="submit" class="py-1.5 px-3 rounded text-white bg-green-600 block">
-                        Submit
-                    </button>
-                </form>
+                <CommentForm
+                    @updateSongComments="updateSongComments"
+                    :songDocumentId="songDocumentId"
+                />
+
                 <!-- Sort Comments -->
                 <select
+                    v-model="sort"
                     class="block mt-4 py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 >
                     <option value="1">Latest</option>
@@ -72,79 +125,7 @@ onMounted(async () => {
             </div>
         </div>
     </section>
+
     <!-- Comments -->
-    <ul class="container mx-auto">
-        <li class="p-6 bg-gray-50 border border-gray-200">
-            <!-- Comment Author -->
-            <div class="mb-5">
-                <div class="font-bold">Elaine Dreyfuss</div>
-                <time>5 mins ago</time>
-            </div>
-
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der
-                doloremque laudantium.
-            </p>
-        </li>
-        <li class="p-6 bg-gray-50 border border-gray-200">
-            <!-- Comment Author -->
-            <div class="mb-5">
-                <div class="font-bold">Elaine Dreyfuss</div>
-                <time>5 mins ago</time>
-            </div>
-
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der
-                doloremque laudantium.
-            </p>
-        </li>
-        <li class="p-6 bg-gray-50 border border-gray-200">
-            <!-- Comment Author -->
-            <div class="mb-5">
-                <div class="font-bold">Elaine Dreyfuss</div>
-                <time>5 mins ago</time>
-            </div>
-
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der
-                doloremque laudantium.
-            </p>
-        </li>
-        <li class="p-6 bg-gray-50 border border-gray-200">
-            <!-- Comment Author -->
-            <div class="mb-5">
-                <div class="font-bold">Elaine Dreyfuss</div>
-                <time>5 mins ago</time>
-            </div>
-
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der
-                doloremque laudantium.
-            </p>
-        </li>
-        <li class="p-6 bg-gray-50 border border-gray-200">
-            <!-- Comment Author -->
-            <div class="mb-5">
-                <div class="font-bold">Elaine Dreyfuss</div>
-                <time>5 mins ago</time>
-            </div>
-
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der
-                doloremque laudantium.
-            </p>
-        </li>
-        <li class="p-6 bg-gray-50 border border-gray-200">
-            <!-- Comment Author -->
-            <div class="mb-5">
-                <div class="font-bold">Elaine Dreyfuss</div>
-                <time>5 mins ago</time>
-            </div>
-
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium der
-                doloremque laudantium.
-            </p>
-        </li>
-    </ul>
+    <CommentsList :comments="sortedComments" />
 </template>
