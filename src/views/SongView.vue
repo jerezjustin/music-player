@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router'
 import { computed, onMounted, ref, watch, type Ref } from 'vue'
+import { usePlayerStore } from '@/stores/player'
 
 import { commentsCollection, songsCollection } from '@/includes/firebase'
 
@@ -12,6 +13,8 @@ import CommentsList from '@/components/CommentsList.vue'
 
 const route = useRoute()
 const router = useRouter()
+
+const playerStore = usePlayerStore()
 
 const songDocumentId: string = route.params.id as string
 
@@ -27,6 +30,14 @@ const sortedComments = computed(() => {
 
         return new Date(a.date_posted) - new Date(b.date_posted)
     })
+})
+
+const songIsPlaying = computed(() => {
+    if (!playerStore.playing) {
+        return false
+    }
+
+    return playerStore.current_song?.documentID === songDocumentId
 })
 
 watch(sort, (value) => {
@@ -48,12 +59,15 @@ onMounted(async () => {
 
     sort.value = sortValue == '2' || sortValue == '2' ? sortValue : '1'
 
-    song.value = snapshot.data() as Song
+    song.value = {
+        ...(snapshot.data() as Song),
+        documentID: songDocumentId
+    }
 
     await getComments()
 })
 
-const updateSongComments = async () => {
+const updateSongComments = async (): Promise<void> => {
     song.value.comment_count += 1
 
     await songsCollection.doc(songDocumentId).update({
@@ -63,7 +77,7 @@ const updateSongComments = async () => {
     await getComments()
 }
 
-const getComments = async () => {
+const getComments = async (): Promise<void> => {
     const snapshots = await commentsCollection.where('song_id', '==', songDocumentId).get()
 
     comments.value = []
@@ -87,10 +101,14 @@ const getComments = async () => {
         <div class="container mx-auto flex items-center">
             <!-- Play/Pause Button -->
             <button
+                @click.prevent="playerStore.play(song)"
                 type="button"
                 class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full focus:outline-none"
             >
-                <i class="fas fa-play"></i>
+                <i
+                    class="fas"
+                    :class="{ 'fa-play': !songIsPlaying, 'fa-pause': songIsPlaying }"
+                ></i>
             </button>
             <div class="z-50 text-left ml-8">
                 <!-- Song Info -->
