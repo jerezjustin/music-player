@@ -25,10 +25,16 @@ defineProps({
         </div>
 
         <div class="text-gray-600 text-lg">
-            <span class="comments">
-                <i class="fa fa-comments text-gray-600"></i>
-                {{ song.comment_count }}
-            </span>
+            <RouterLink
+                :to="{ name: 'song', params: { id: song.documentID }, hash: '#comments' }"
+                v-slot="{ navigate }"
+                custom
+            >
+                <span @click="navigate" class="comments">
+                    <i class="fa fa-comments text-gray-600"></i>
+                    {{ song.comment_count }}
+                </span>
+            </RouterLink>
         </div>
     </li>
 </template>
