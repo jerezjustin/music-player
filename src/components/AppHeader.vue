@@ -30,7 +30,7 @@ const logout = () => {
                 exact-active-class="no-active"
                 class="text-white font-bold uppercase text-2xl mr-auto"
             >
-                Music
+                {{ $t('header.music') }}
             </RouterLink>
 
             <div class="flex flex-grow items-center">
@@ -39,17 +39,19 @@ const logout = () => {
                     <!-- Navigation Links -->
                     <li v-if="!userStore.userLoggedIn">
                         <a class="px-2 text-white" href="#" @click.prevent="toggleAuthModal">
-                            Login / Register
+                            {{ $t('header.login-register') }}
                         </a>
                     </li>
                     <template v-else>
                         <li>
                             <RouterLink :to="{ name: 'manage' }" class="px-2 text-white" href="#">
-                                Manage
+                                {{ $t('header.manage') }}
                             </RouterLink>
                         </li>
                         <li>
-                            <a class="px-2 text-white" href="#" @click.prevent="logout">Logout</a>
+                            <a class="px-2 text-white" href="#" @click.prevent="logout">{{
+                                $t('header.logout')
+                            }}</a>
                         </li>
                     </template>
                 </ul>

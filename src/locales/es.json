@@ -1,1 +1,8 @@
-{}
+{
+    "header": {
+        "music": "Música",
+        "login-register": "Iniciar Sesión / Registrarse",
+        "manage": "Manejar",
+        "logout": "Cerrar Sesión"
+    }
+}
