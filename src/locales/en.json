@@ -4,5 +4,9 @@
         "login-register": "Login / register",
         "manage": "Manage",
         "logout": "Logout"
+    },
+    "home": {
+        "title": "Listen to Great Music!",
+        "songs_count": "No Songs | 1 Song | {count} songs"
     }
 }

@@ -4,5 +4,9 @@
         "login-register": "Iniciar Sesión / Registrarse",
         "manage": "Manejar",
         "logout": "Cerrar Sesión"
+    },
+    "home": {
+        "title": "Escucha Buena Música!",
+        "songs_count": "Sin Canciones | 1 Canción | {count} Canciones"
     }
 }
