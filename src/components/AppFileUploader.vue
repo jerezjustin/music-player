@@ -107,7 +107,7 @@ onBeforeUnmount(() => {
             v-icon.right.green.xxl="'upload'"
             class="px-6 pt-6 pb-5 font-bold border-b border-gray-200"
         >
-            <span class="card-title">Upload</span>
+            <span class="card-title">{{ $t('manage.file_uploader.upload') }}</span>
         </div>
         <div class="p-6">
             <!-- Upload Dropbox -->
@@ -122,7 +122,7 @@ onBeforeUnmount(() => {
                 @dragleave.prevent.stop="isDragover = false"
                 @drop.prevent.stop="upload($event)"
             >
-                <h5>Drop your files here</h5>
+                <h5>{{ $t('manage.file_uploader.input') }}</h5>
             </div>
 
             <input type="file" multiple @change="upload($event)" />

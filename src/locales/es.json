@@ -17,5 +17,12 @@
             "comment": "Escribe tu comentario aquí...",
             "submit": "Comentar"
         }
+    },
+    "manage": {
+        "my_songs": "Mis Canciones",
+        "file_uploader": {
+            "upload": "Subir",
+            "input": "Arroja tus canciones aquí."
+        }
     }
 }

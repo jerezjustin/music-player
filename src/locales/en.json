@@ -17,5 +17,12 @@
             "comment": "Your comment here...",
             "submit": "Submit"
         }
+    },
+    "manage": {
+        "my_songs": "My Songs",
+        "file_uploader": {
+            "upload": "Upload",
+            "input": "Drop your files here."
+        }
     }
 }
