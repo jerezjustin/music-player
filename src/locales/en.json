@@ -8,5 +8,14 @@
     "home": {
         "title": "Listen to Great Music!",
         "songs_count": "No Songs | 1 Song | {count} songs"
+    },
+    "song": {
+        "comment_count": "No Comments | 1 Comment | {count} Comments",
+        "latest": "Latest",
+        "oldest": "Oldest",
+        "comment_form": {
+            "comment": "Your comment here...",
+            "submit": "Submit"
+        }
     }
 }

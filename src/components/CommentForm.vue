@@ -60,7 +60,7 @@ const addComment = async (values: { comment: string }, { resetForm }) => {
             type="text"
             as="textarea"
             class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded mb-4"
-            placeholder="Your comment here..."
+            :placeholder="$t('song.comment_form.comment')"
         ></VeeField>
 
         <ErrorMessage class="text-red-500" name="comment" />
@@ -70,7 +70,7 @@ const addComment = async (values: { comment: string }, { resetForm }) => {
             type="submit"
             class="py-1.5 px-3 rounded text-white bg-green-600 block"
         >
-            Submit
+            {{ $t('song.comment_form.submit') }}
         </button>
     </VeeForm>
 </template>

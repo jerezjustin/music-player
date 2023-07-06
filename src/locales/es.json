@@ -8,5 +8,14 @@
     "home": {
         "title": "Escucha Buena Música!",
         "songs_count": "Sin Canciones | 1 Canción | {count} Canciones"
+    },
+    "song": {
+        "comment_count": "Sin Comentarios | 1 Comentario | {count} Comentarios",
+        "latest": "Recientes",
+        "oldest": "Antiguos",
+        "comment_form": {
+            "comment": "Escribe tu comentario aquí...",
+            "submit": "Comentar"
+        }
     }
 }
