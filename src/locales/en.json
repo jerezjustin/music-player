@@ -24,5 +24,29 @@
             "upload": "Upload",
             "input": "Drop your files here."
         }
+    },
+    "auth": {
+        "your_account": "Your Account",
+        "login": "Sign In",
+        "register": "Sign Up"
+    },
+    "login": {
+        "login": "Login",
+        "email": "Email",
+        "password": "Password"
+    },
+    "register": {
+        "register": "Register",
+        "name": "Name",
+        "email": "Email",
+        "age": "Age",
+        "password": "Password",
+        "confirm_password": "Confirm Password",
+        "country": "Country",
+        "usa": "USA",
+        "mexico": "Mexico",
+        "germany": "Germany",
+        "antartic": "Antarctic",
+        "tos": "Accept terms of service"
     }
 }

@@ -24,5 +24,29 @@
             "upload": "Subir",
             "input": "Arroja tus canciones aquí."
         }
+    },
+    "auth": {
+        "your_account": "Tu Cuenta",
+        "login": "Iniciar Sesión",
+        "register": "Crear Cuenta"
+    },
+    "login": {
+        "login": "Ingresar",
+        "email": "Correo Electrónico",
+        "password": "Contraseña"
+    },
+    "register": {
+        "register": "Crear",
+        "name": "Nombre",
+        "email": "Correo Electrónico",
+        "age": "Edad",
+        "password": "Contraseña",
+        "confirm_password": "Confirmar Contraseña",
+        "country": "País",
+        "usa": "USA",
+        "mexico": "México",
+        "germany": "Alemania",
+        "antartic": "Antártida",
+        "tos": "Aceptar términos y condiciones"
     }
 }
