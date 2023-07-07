@@ -1,0 +1,52 @@
+{
+    "header": {
+        "music": "Música",
+        "login-register": "Iniciar Sesión / Registrarse",
+        "manage": "Manejar",
+        "logout": "Cerrar Sesión"
+    },
+    "home": {
+        "title": "Escucha Buena Música!",
+        "songs_count": "Sin Canciones | 1 Canción | {count} Canciones"
+    },
+    "song": {
+        "comment_count": "Sin Comentarios | 1 Comentario | {count} Comentarios",
+        "latest": "Recientes",
+        "oldest": "Antiguos",
+        "comment_form": {
+            "comment": "Escribe tu comentario aquí...",
+            "submit": "Comentar"
+        }
+    },
+    "manage": {
+        "my_songs": "Mis Canciones",
+        "file_uploader": {
+            "upload": "Subir",
+            "input": "Arroja tus canciones aquí."
+        }
+    },
+    "auth": {
+        "your_account": "Tu Cuenta",
+        "login": "Iniciar Sesión",
+        "register": "Crear Cuenta"
+    },
+    "login": {
+        "login": "Ingresar",
+        "email": "Correo Electrónico",
+        "password": "Contraseña"
+    },
+    "register": {
+        "register": "Crear",
+        "name": "Nombre",
+        "email": "Correo Electrónico",
+        "age": "Edad",
+        "password": "Contraseña",
+        "confirm_password": "Confirmar Contraseña",
+        "country": "País",
+        "usa": "USA",
+        "mexico": "México",
+        "germany": "Alemania",
+        "antartic": "Antártida",
+        "tos": "Aceptar términos y condiciones"
+    }
+}

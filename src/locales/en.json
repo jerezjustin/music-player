@@ -1,0 +1,52 @@
+{
+    "header": {
+        "music": "Music",
+        "login-register": "Login / register",
+        "manage": "Manage",
+        "logout": "Logout"
+    },
+    "home": {
+        "title": "Listen to Great Music!",
+        "songs_count": "No Songs | 1 Song | {count} songs"
+    },
+    "song": {
+        "comment_count": "No Comments | 1 Comment | {count} Comments",
+        "latest": "Latest",
+        "oldest": "Oldest",
+        "comment_form": {
+            "comment": "Your comment here...",
+            "submit": "Submit"
+        }
+    },
+    "manage": {
+        "my_songs": "My Songs",
+        "file_uploader": {
+            "upload": "Upload",
+            "input": "Drop your files here."
+        }
+    },
+    "auth": {
+        "your_account": "Your Account",
+        "login": "Sign In",
+        "register": "Sign Up"
+    },
+    "login": {
+        "login": "Login",
+        "email": "Email",
+        "password": "Password"
+    },
+    "register": {
+        "register": "Register",
+        "name": "Name",
+        "email": "Email",
+        "age": "Age",
+        "password": "Password",
+        "confirm_password": "Confirm Password",
+        "country": "Country",
+        "usa": "USA",
+        "mexico": "Mexico",
+        "germany": "Germany",
+        "antartic": "Antarctic",
+        "tos": "Accept terms of service"
+    }
+}
