@@ -40,6 +40,18 @@ const upload = ($event: FileEventTarget) => {
             return
         }
 
+        if (!navigator.onLine) {
+            uploads.value.push({
+                task: {} as UploadingFile,
+                current_progress: 100,
+                name: file.name,
+                state: State.error,
+                icon: 'fas fa-times'
+            })
+
+            return
+        }
+
         const storageRef = storage.ref()
         const songsRef = storageRef.child(`songs/${file.name}`)
         const task = songsRef.put(file)
