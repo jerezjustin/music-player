@@ -8,9 +8,12 @@ import VeeValidate from './includes/validation'
 import { auth } from './includes/firebase'
 import Icon from './directives/icon'
 import i18n from './includes/i18n'
+import { registerSW } from 'virtual:pwa-register'
 
 import App from './App.vue'
 import router from './router'
+
+registerSW({ inmedita: true })
 
 let app: AppVue
 
